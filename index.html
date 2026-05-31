@@ -68,7 +68,6 @@ nav.at-top{top:0;}
 .nav-links{display:flex;gap:clamp(0.6rem,2vw,1.4rem);}
 .nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:clamp(0.6rem,1.5vw,0.72rem);letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;white-space:nowrap;}
 .nav-links a:hover{color:var(--gold);}
-/* hamburger for mobile */
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
 .nav-hamburger span{display:block;width:22px;height:2px;background:var(--gold);border-radius:2px;transition:all 0.3s;}
 .mobile-menu{
@@ -142,9 +141,14 @@ nav.at-top{top:0;}
 .event-desc{font-size:clamp(0.78rem,1.8vw,0.88rem);color:#555;line-height:1.7;}
 @media(max-width:480px){.event-card{grid-template-columns:1fr;}.event-date-badge{display:inline-block;margin-bottom:0.4rem;}}
  
-/* ── VENUE ── */
+/* ── VENUE (two subsections) ── */
+.venue-subsection{margin-bottom:2rem;}
+.venue-subheading{font-size:clamp(1rem,2.5vw,1.3rem);font-weight:700;margin-bottom:1rem;color:var(--light-gold);border-left:3px solid var(--gold);padding-left:0.8rem;}
+.section-gold .venue-subheading{color:var(--dark);border-left-color:var(--deep-gold);}
 .venue-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:1.2rem;margin-bottom:1.5rem;}
-.venue-card{background:rgba(255,255,255,0.07);border:1px solid rgba(200,146,42,0.3);border-radius:12px;padding:clamp(1.2rem,3vw,1.8rem);transition:border-color 0.3s,background 0.3s;}
+.venue-card{
+  background:rgba(255,255,255,0.07);border:1px solid rgba(200,146,42,0.3);border-radius:12px;padding:clamp(1.2rem,3vw,1.8rem);transition:border-color 0.3s,background 0.3s;
+}
 .venue-card:hover{border-color:var(--gold);background:rgba(200,146,42,0.08);}
 .venue-icon{font-size:1.8rem;margin-bottom:0.7rem;}
 .venue-name{font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:700;color:var(--light-gold);margin-bottom:0.5rem;}
@@ -173,7 +177,7 @@ nav.at-top{top:0;}
 .map-open-btn.secondary:hover{background:var(--gold);color:#fff;}
 .map-btn-row{display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;margin-top:1rem;}
  
-/* ── STAY ── */
+/* ── STAY (only Hotel Guru) ── */
 .stay-card{background:#fff;border-radius:12px;padding:clamp(1.2rem,3vw,1.8rem);box-shadow:0 4px 20px rgba(0,0,0,0.07);}
 .stay-icon{font-size:1.8rem;margin-bottom:0.7rem;}
 .stay-name{font-weight:700;font-size:clamp(0.95rem,2.5vw,1.05rem);color:var(--dark);margin-bottom:0.5rem;}
@@ -199,7 +203,6 @@ footer .gold{color:var(--gold);}
 </head>
 <body>
  
-<!-- ══ LANGUAGE PICKER ══ -->
 <div id="lang-screen">
   <div class="lang-om">ॐ</div>
   <div class="lang-title">சஷ்டியப்த பூர்த்தி சாந்தி</div>
@@ -212,7 +215,6 @@ footer .gold{color:var(--gold);}
   </div>
 </div>
  
-<!-- ══ STICKY COUNTDOWN ══ -->
 <div id="sticky-countdown">
   <div class="cd-label" id="cd-label-text">நிகழ்ச்சிக்கு இன்னும்</div>
   <div class="cd-boxes">
@@ -223,7 +225,6 @@ footer .gold{color:var(--gold);}
   </div>
 </div>
  
-<!-- ══ NAV ══ -->
 <nav id="main-nav" class="at-top">
   <div class="nav-brand" id="nav-brand">✦ சஷ்டியப்த பூர்த்தி</div>
   <div class="nav-links">
@@ -238,20 +239,17 @@ footer .gold{color:var(--gold);}
   </button>
 </nav>
  
-<!-- Mobile Menu -->
 <div class="mobile-menu" id="mobile-menu">
   <button class="mobile-menu-close" onclick="closeMenu()">✕</button>
   <a href="#schedule" data-mi="0" onclick="closeMenu()">நிகழ்ச்சி</a>
   <a href="#venue" data-mi="1" onclick="closeMenu()">இடம்</a>
   <a href="#stay" data-mi="2" onclick="closeMenu()">தங்குமிடம்</a>
-  <a href="#food" data-mi="3" onclick="உணவு">உணவு</a>
+  <a href="#food" data-mi="3" onclick="closeMenu()">உணவு</a>
   <a href="#family" data-mi="4" onclick="closeMenu()">குடும்பம்</a>
 </div>
  
-<!-- ══ MAIN CONTENT ══ -->
 <div id="main-content">
  
-<!-- HERO -->
 <section class="hero">
   <div class="om-symbol">ॐ</div>
   <div class="deity-line" id="hero-deity">ஸ்ரீ சிறுகிராமம் முத்துமாரியம்மன் துணை &nbsp;|&nbsp; ஸ்ரீ வாசவி சகாயம்</div>
@@ -269,7 +267,6 @@ footer .gold{color:var(--gold);}
   <div class="scroll-hint" id="scroll-hint">↓ &nbsp; மேலும் காண &nbsp; ↓</div>
 </section>
  
-<!-- SCHEDULE -->
 <section class="section section-alt" id="schedule">
   <div class="section-inner">
     <div class="section-tag" id="tag-schedule">நிகழ்ச்சி நிரல்</div>
@@ -303,29 +300,38 @@ footer .gold{color:var(--gold);}
   </div>
 </section>
  
-<!-- VENUE -->
+<!-- VENUE SECTION with two subsections: Wedding (Temple+Hall) and Reception (Hotel Manivizha) -->
 <section class="section section-dark" id="venue">
   <div class="section-inner">
     <div class="section-tag" id="tag-venue">இடம் & வழிகாட்டி</div>
     <h2 class="section-heading" id="head-venue">நிகழ்ச்சி நடைபெறும் இடங்கள்</h2>
-    <div class="venue-cards">
-      <div class="venue-card">
-        <div class="venue-icon">🛕</div>
-        <div class="venue-name" id="v1-name">அமிர்தகடேஸ்வரர் ஆலயம்</div>
-        <div class="venue-address" id="v1-addr">பிச்சைக்கட்டளை மண்டபம்<br>Sannathi St, Thirukadaiyur, TN – 609 311</div>
-        <div class="venue-detail" id="v1-detail">⭐ 4.6/5 &nbsp;|&nbsp; 📍 தரும்புரம் ஆதினம்<br>🕘 காலை 6:00 – மதியம் 1:00, மாலை 4:00 – 8:30</div>
-        <a class="map-btn" href="https://maps.google.com/?q=Amritaghateswarar+Temple+Thirukkadaiyur" target="_blank" id="v1-btn">📍 வழிகாட்டல் பெறுக</a>
+    
+    <div class="venue-subsection">
+      <div class="venue-subheading" id="wedding-heading">💒 திருமண நிகழ்வு</div>
+      <div class="venue-cards">
+        <div class="venue-card">
+          <div class="venue-icon">🛕</div>
+          <div class="venue-name" id="v1-name">அமிர்தகடேஸ்வரர் ஆலயம்</div>
+          <div class="venue-address" id="v1-addr">பிச்சைக்கட்டளை மண்டபம்<br>Sannathi St, Thirukadaiyur, TN – 609 311</div>
+          <div class="venue-detail" id="v1-detail">⭐ 4.6/5 &nbsp;|&nbsp; 📍 தரும்புரம் ஆதினம்<br>🕘 காலை 6:00 – மதியம் 1:00, மாலை 4:00 – 8:30</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Amritaghateswarar+Temple+Thirukkadaiyur" target="_blank" id="v1-btn">📍 வழிகாட்டல் பெறுக</a>
+        </div>
       </div>
-      <div class="venue-card">
-        <div class="venue-icon">🏨</div>
-        <div class="venue-name" id="v2-name">ஹோட்டல் மணிவிழா</div>
-        <div class="venue-address" id="v2-addr">Sannathi St, Thirukadaiyur, TN – 609 311<br><span id="v2-opp">(ஆலயத்திற்கு எதிரில்)</span></div>
-        <div class="venue-detail">⭐ 4.3/5 &nbsp;|&nbsp; 📞 +91 94437 41451<br>🕐 24 மணி நேரமும் திறந்திருக்கும்</div>
-        <a class="map-btn" href="https://maps.google.com/?q=Hotel+Manivizha+Thirukkadaiyur" target="_blank" id="v2-btn">📍 வழிகாட்டல் பெறுக</a>
+    </div>
+
+    <div class="venue-subsection">
+      <div class="venue-subheading" id="reception-heading">🎉 வரவேற்பு விழா</div>
+      <div class="venue-cards">
+        <div class="venue-card">
+          <div class="venue-icon">🏨</div>
+          <div class="venue-name" id="v2-name">ஹோட்டல் மணிவிழா</div>
+          <div class="venue-address" id="v2-addr">Sannathi St, Thirukadaiyur, TN – 609 311<br><span id="v2-opp">(ஆலயத்திற்கு எதிரில்)</span></div>
+          <div class="venue-detail">⭐ 4.3/5 &nbsp;|&nbsp; 📞 +91 94437 41451<br>🕐 24 மணி நேரமும் திறந்திருக்கும்</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Hotel+Manivizha+Thirukkadaiyur" target="_blank" id="v2-btn">📍 வழிகாட்டல் பெறுக</a>
+        </div>
       </div>
     </div>
  
-    <!-- MAP REPLACEMENT — no iframe -->
     <div class="map-static">
       <div class="map-static-icon">🗺️</div>
       <div class="map-static-title" id="map-title">பிச்சைக்கட்டளை மண்டபம், திருக்கடையூர்</div>
@@ -346,29 +352,22 @@ footer .gold{color:var(--gold);}
   </div>
 </section>
  
-<!-- STAY -->
+<!-- STAY: only Hotel Guru remains -->
 <section class="section section-gold" id="stay">
   <div class="section-inner">
     <div class="section-tag" id="tag-stay">தங்குமிடம்</div>
     <h2 class="section-heading" id="head-stay">தங்கும் வசதி</h2>
-    <div class="venue-cards">
+    <div class="venue-cards" style="grid-template-columns:1fr; max-width:450px; margin-left:auto; margin-right:auto;">
       <div class="stay-card">
         <div class="stay-icon">🏨</div>
         <div class="stay-name" id="s1-name">ஹோட்டல் குரு</div>
         <div class="stay-desc" id="s1-desc">ஹோட்டல் மணிவிழாவிற்கு எதிரில், Thirukkadaiyur<br><br>தங்கும் வசதிக்கு ஏற்பாடு செய்யப்பட்டுள்ளது. முன்னதாக தொடர்பு கொண்டு அறை பதிவு செய்துகொள்ளவும்.</div>
         <a class="map-btn" style="border-color:var(--gold);color:var(--deep-gold);" href="https://maps.google.com/?q=Hotel+Guru+Thirukkadaiyur" target="_blank" id="s1-btn">📍 வழிகாட்டல் பெறுக</a>
       </div>
-      <div class="stay-card">
-        <div class="stay-icon">🏨</div>
-        <div class="stay-name" id="s2-name">ஹோட்டல் மணிவிழா</div>
-        <div class="stay-desc" id="s2-desc">Sannathi St, Thirukadaiyur<br>📞 +91 94437 41451<br><br>ஆலயத்திற்கு மிக அருகில் உள்ளது. விழாவின் விருந்து நிகழ்வுகளும் இங்கே நடைபெறும்.</div>
-        <a class="map-btn" style="border-color:var(--gold);color:var(--deep-gold);" href="tel:+919443741451" id="s2-btn">📞 அழைக்கவும்</a>
-      </div>
     </div>
   </div>
 </section>
  
-<!-- FOOD -->
 <section class="section section-dark" id="food">
   <div class="section-inner">
     <div class="section-tag" id="tag-food" style="color:var(--light-gold);border-color:var(--light-gold)">உணவு அட்டவணை</div>
@@ -393,7 +392,6 @@ footer .gold{color:var(--gold);}
   </div>
 </section>
  
-<!-- FAMILY -->
 <section class="section section-gold" id="family">
   <div class="section-inner text-center">
     <div class="section-tag" id="tag-family" style="display:block;text-align:center;">குடும்பத்தினர்</div>
@@ -407,7 +405,7 @@ footer .gold{color:var(--gold);}
     </div>
     <p style="margin-top:1.5rem;font-size:clamp(0.85rem,2vw,0.95rem);color:#555;line-height:1.8;" id="family-note">
       தங்கள் தங்கள் சுற்றமும் நட்பும் சூழ வருகைதந்து சிறப்பிக்க வேண்டுகிறோம்.<br>
-      <strong>களளாக்குறிச்சி</strong>
+      <strong id="location-name">கள்ளக்குறிச்சி</strong>
     </p>
     <div class="star-row" style="margin-top:0.8rem;">✦ ✦ ✦</div>
   </div>
@@ -419,10 +417,9 @@ footer .gold{color:var(--gold);}
   <div>S.V.R. சுரேஷ் செட்டியார் & G. ஸ்வர்ணலதா</div>
   <div style="margin-top:0.4rem;font-size:0.68rem;opacity:0.45;" id="footer-venue">பிச்சைக்கட்டளை மண்டபம், அமிர்தகடேஸ்வரர் ஆலயம், திருக்கடையூர்</div>
 </footer>
-</div><!-- end main-content -->
+</div>
  
 <script>
-/* ── TRANSLATIONS ── */
 const T = {
   ta:{
     navBrand:'✦ சஷ்டியப்த பூர்த்தி',
@@ -441,6 +438,8 @@ const T = {
     ev3Title:'வரவேற்பு விழா 🎉', ev3Time:'காலை 11:00 மணி – மதியம் 1:00 மணி',
     ev3Loc:'இடம்: ஹோட்டல் மணிவிழா (பார்ட்டி ஹால்), திருக்கடையூர்', ev3Desc:'உணவு விருந்தும் நடைபெறும்.',
     tagVenue:'இடம் & வழிகாட்டி', headVenue:'நிகழ்ச்சி நடைபெறும் இடங்கள்',
+    weddingHeading:'💒 திருமண நிகழ்வு',
+    receptionHeading:'🎉 வரவேற்பு விழா',
     v1Name:'அமிர்தகடேஸ்வரர் ஆலயம்', v1Addr:'பிச்சைக்கட்டளை மண்டபம்<br>Sannathi St, Thirukadaiyur, TN – 609 311',
     v1Detail:'⭐ 4.6/5 &nbsp;|&nbsp; 📍 தரும்புரம் ஆதினம்<br>🕘 காலை 6:00 – மதியம் 1:00, மாலை 4:00 – 8:30',
     v1Btn:'📍 வழிகாட்டல் பெறுக',
@@ -450,13 +449,12 @@ const T = {
     mapBtn1:'🗺 Google Maps', mapBtn2:'🍎 Apple Maps',
     tagStay:'தங்குமிடம்', headStay:'தங்கும் வசதி',
     s1Name:'ஹோட்டல் குரு', s1Desc:'ஹோட்டல் மணிவிழாவிற்கு எதிரில், Thirukkadaiyur<br><br>தங்கும் வசதிக்கு ஏற்பாடு செய்யப்பட்டுள்ளது. முன்னதாக தொடர்பு கொண்டு அறை பதிவு செய்துகொள்ளவும்.', s1Btn:'📍 வழிகாட்டல் பெறுக',
-    s2Name:'ஹோட்டல் மணிவிழா', s2Desc:'Sannathi St, Thirukadaiyur<br>📞 +91 94437 41451<br><br>ஆலயத்திற்கு மிக அருகில் உள்ளது. விழாவின் விருந்து நிகழ்வுகளும் இங்கே நடைபெறும்.', s2Btn:'📞 அழைக்கவும்',
     tagFood:'உணவு அட்டவணை', headFood:'உணவு வசதி',
     m1Date:'25 ஜூன் 2026 – காலை', m1Type:'காலை உணவு', m1Venue:'விருத்தகிரீஸ்வரர் கோவில், விருத்தாசலம்',
     m2Date:'25 ஜூன் 2026 – மதியம் & இரவு', m2Type:'மதிய உணவு, சிற்றுண்டி & இரவு உணவு', m2Venue:'ஹோட்டல் மணிவிழா, திருக்கடையூர்',
     m3Date:'26 ஜூன் 2026 – காலை & மதியம்', m3Type:'காலை & மதிய உணவு', m3Venue:'ஹோட்டல் மணிவிழா, திருக்கடையூர்',
     tagFamily:'குடும்பத்தினர்', headFamily:'நல்வருகையை நாடும் குடும்பத்தினர்',
-    familyNote:'தங்கள் தங்கள் சுற்றமும் நட்பும் சூழ வருகைதந்து சிறப்பிக்க வேண்டுகிறோம்.<br><strong>களளாக்குறிச்சி</strong>',
+    familyNote:'தங்கள் தங்கள் சுற்றமும் நட்பும் சூழ வருகைதந்து சிறப்பிக்க வேண்டுகிறோம்.<br><strong>கள்ளக்குறிச்சி</strong>',
     footerTitle:'சஷ்டியப்த பூர்த்தி சாந்தி – ஜூன் 26, 2026',
     footerVenue:'பிச்சைக்கட்டளை மண்டபம், அமிர்தகடேஸ்வரர் ஆலயம், திருக்கடையூர்',
     navLinks:['நிகழ்ச்சி','இடம்','தங்குமிடம்','உணவு','குடும்பம்'],
@@ -479,6 +477,8 @@ const T = {
     ev3Title:'Reception 🎉', ev3Time:'11:00 AM – 1:00 PM',
     ev3Loc:'Venue: Hotel Manivizha (Party Hall), Thirukkadaiyur', ev3Desc:'Lunch reception for all guests.',
     tagVenue:'Venue & Directions', headVenue:'Event Venues',
+    weddingHeading:'💒 Wedding Ceremony',
+    receptionHeading:'🎉 Reception',
     v1Name:'Amirtha Kadeeswara Temple', v1Addr:'Pichakattalai Hall<br>Sannathi St, Thirukadaiyur, TN – 609 311',
     v1Detail:'⭐ 4.6/5 &nbsp;|&nbsp; 📍 Dharampuram Adeenam<br>🕘 Open: 6:00 AM – 1:00 PM, 4:00 – 8:30 PM',
     v1Btn:'📍 Get Directions',
@@ -488,7 +488,6 @@ const T = {
     mapBtn1:'🗺 Google Maps', mapBtn2:'🍎 Apple Maps',
     tagStay:'Accommodation', headStay:'Stay Options',
     s1Name:'Hotel Guru', s1Desc:'Opposite Hotel Manivizha, Thirukkadaiyur<br><br>Accommodation has been arranged. Please book your room in advance.', s1Btn:'📍 Get Directions',
-    s2Name:'Hotel Manivizha', s2Desc:'Sannathi St, Thirukkadaiyur<br>📞 +91 94437 41451<br><br>Very close to the temple. Lunch reception will also be held here.', s2Btn:'📞 Call',
     tagFood:'Meals', headFood:'Food Arrangements',
     m1Date:'25 June 2026 – Morning', m1Type:'Breakfast', m1Venue:'Virudhagireeswarar Temple, Virudhachalam',
     m2Date:'25 June 2026 – Afternoon & Night', m2Type:'Lunch, Snacks & Dinner', m2Venue:'Hotel Manivizha, Thirukkadaiyur',
@@ -501,7 +500,7 @@ const T = {
     cdDone:'🎉 The celebration has begun!'
   }
 };
- 
+
 function applyLang(lang){
   const t=T[lang];
   const s=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h;};
@@ -514,24 +513,27 @@ function applyLang(lang){
   s('ev2-title',t.ev2Title); s('ev2-time',t.ev2Time); s('ev2-desc',t.ev2Desc); s('ev2-loc',t.ev2Loc);
   s('ev3-title',t.ev3Title); s('ev3-time',t.ev3Time); s('ev3-desc',t.ev3Desc); s('ev3-loc',t.ev3Loc);
   s('tag-venue',t.tagVenue); s('head-venue',t.headVenue);
+  s('wedding-heading',t.weddingHeading);
+  s('reception-heading',t.receptionHeading);
   s('v1-name',t.v1Name); s('v1-addr',t.v1Addr); s('v1-detail',t.v1Detail); s('v1-btn',t.v1Btn);
   s('v2-name',t.v2Name); s('v2-addr',t.v2Addr); s('v2-opp',t.v2Opp); s('v2-btn',t.v2Btn);
   s('map-title',t.mapTitle); s('map-addr',t.mapAddr); s('map-btn1',t.mapBtn1); s('map-btn2',t.mapBtn2);
   s('tag-stay',t.tagStay); s('head-stay',t.headStay);
   s('s1-name',t.s1Name); s('s1-desc',t.s1Desc); s('s1-btn',t.s1Btn);
-  s('s2-name',t.s2Name); s('s2-desc',t.s2Desc); s('s2-btn',t.s2Btn);
   s('tag-food',t.tagFood); s('head-food',t.headFood);
   s('m1-date',t.m1Date); s('m1-type',t.m1Type); s('m1-venue',t.m1Venue);
   s('m2-date',t.m2Date); s('m2-type',t.m2Type); s('m2-venue',t.m2Venue);
   s('m3-date',t.m3Date); s('m3-type',t.m3Type); s('m3-venue',t.m3Venue);
-  s('tag-family',t.tagFamily); s('head-family',t.headFamily); s('family-note',t.familyNote);
+  s('tag-family',t.tagFamily); s('head-family',t.headFamily); 
+  const familyNoteHTML = t.familyNote;
+  document.getElementById('family-note').innerHTML = familyNoteHTML;
   s('footer-title',t.footerTitle); s('footer-venue',t.footerVenue);
   document.querySelectorAll('.nav-links a').forEach((a,i)=>{if(t.navLinks[i])a.textContent=t.navLinks[i];});
   document.querySelectorAll('.mobile-menu a').forEach((a,i)=>{if(t.navLinks[i])a.textContent=t.navLinks[i];});
   document.documentElement.lang=lang;
   window._cdDone=t.cdDone;
 }
- 
+
 function chooseLang(lang){
   applyLang(lang);
   document.getElementById('lang-screen').classList.add('hidden');
@@ -539,11 +541,10 @@ function chooseLang(lang){
   startCountdown();
   initScrollEffects();
 }
- 
+
 function openMenu(){ document.getElementById('mobile-menu').classList.add('open'); }
 function closeMenu(){ document.getElementById('mobile-menu').classList.remove('open'); }
- 
-/* ── COUNTDOWN ── */
+
 let cdInterval=null;
 function startCountdown(){
   const target=new Date('2026-06-26T09:00:00+05:30');
@@ -563,15 +564,13 @@ function startCountdown(){
   }
   tick(); cdInterval=setInterval(tick,1000);
  
-  /* show countdown after hero scrolls away */
   const hero=document.querySelector('.hero'),nav=document.getElementById('main-nav'),cd=document.getElementById('sticky-countdown');
   new IntersectionObserver(entries=>{
     if(!entries[0].isIntersecting){cd.classList.add('visible');nav.classList.replace('at-top','below-cd');}
     else{cd.classList.remove('visible');nav.classList.replace('below-cd','at-top');}
   },{threshold:0.1}).observe(hero);
 }
- 
-/* ── FADE IN ON SCROLL ── */
+
 function initScrollEffects(){
   const io=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});
