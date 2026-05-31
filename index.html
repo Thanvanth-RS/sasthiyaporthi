@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sashtiapthapoorthi – SVR Suresh Chettiar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Noto+Serif+Tamil:wght@300;400;600;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:#C8922A; --deep-gold:#A0701A; --light-gold:#F5D78E;
+  --cream:#FDF6E3; --dark:#2C1A05; --orange:#E07B20;
+  --text-dark:#3D1F00; --rust:#8B3A0F;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#1a0a00;color:var(--text-dark);font-family:'Noto Serif Tamil',serif;overflow-x:hidden;}
+ 
+/* ── LANGUAGE PICKER ── */
+#lang-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(ellipse at 50% 40%,#4a1e00 0%,#0d0500 80%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:1.5rem;
+  transition:opacity 0.6s ease,visibility 0.6s ease;
+}
+#lang-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.lang-om{font-size:clamp(3rem,8vw,5rem);color:var(--gold);animation:float 3s ease-in-out infinite;filter:drop-shadow(0 0 25px rgba(200,146,42,0.7));margin-bottom:0.8rem;}
+.lang-title{font-size:clamp(1rem,3.5vw,1.5rem);color:var(--light-gold);margin-bottom:0.4rem;font-family:'Noto Serif Tamil',serif;}
+.lang-subtitle{font-size:clamp(0.8rem,2.5vw,1.05rem);color:rgba(245,215,142,0.65);margin-bottom:2rem;font-family:'EB Garamond',serif;letter-spacing:0.1em;}
+.lang-divider{width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:1rem auto;}
+.lang-prompt{font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;}
+.lang-btns{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;}
+.lang-btn{
+  padding:0.9rem 2.2rem;border-radius:50px;font-size:clamp(0.9rem,2.5vw,1.05rem);font-weight:700;cursor:pointer;
+  border:2px solid var(--gold);transition:all 0.3s;font-family:'Noto Serif Tamil',serif;
+  background:transparent;color:var(--light-gold);
+}
+.lang-btn:hover,.lang-btn:active{background:var(--gold);color:#fff;transform:scale(1.05);box-shadow:0 0 30px rgba(200,146,42,0.4);}
+ 
+/* ── STICKY COUNTDOWN ── */
+#sticky-countdown{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:linear-gradient(135deg,var(--deep-gold),var(--orange));
+  display:flex;align-items:center;justify-content:center;gap:clamp(0.8rem,2vw,1.5rem);
+  padding:0.5rem 1rem;flex-wrap:wrap;
+  box-shadow:0 2px 20px rgba(0,0,0,0.4);
+  transform:translateY(-100%);transition:transform 0.5s ease;
+}
+#sticky-countdown.visible{transform:translateY(0);}
+.cd-label{color:rgba(255,255,255,0.9);font-size:clamp(0.6rem,1.5vw,0.75rem);letter-spacing:0.15em;text-transform:uppercase;white-space:nowrap;}
+.cd-boxes{display:flex;gap:0.5rem;}
+.cd-box{background:rgba(0,0,0,0.22);border-radius:6px;padding:0.3rem 0.6rem;text-align:center;min-width:48px;}
+.cd-num{font-size:clamp(1rem,3vw,1.4rem);font-weight:700;color:#fff;font-family:'Cinzel Decorative',serif;line-height:1;}
+.cd-lbl{font-size:0.5rem;color:rgba(255,255,255,0.8);letter-spacing:0.1em;margin-top:2px;}
+@media(max-width:400px){.cd-label{display:none;}}
+ 
+/* ── NAV ── */
+nav{
+  position:fixed;left:0;right:0;z-index:100;
+  background:rgba(10,3,0,0.93);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(200,146,42,0.2);
+  padding:0.75rem 1.2rem;display:flex;justify-content:space-between;align-items:center;
+  transition:top 0.5s ease;
+}
+nav.below-cd{top:44px;}
+nav.at-top{top:0;}
+.nav-brand{color:var(--gold);font-family:'Noto Serif Tamil',serif;font-size:clamp(0.7rem,2vw,0.9rem);font-weight:700;white-space:nowrap;}
+.nav-links{display:flex;gap:clamp(0.6rem,2vw,1.4rem);}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:clamp(0.6rem,1.5vw,0.72rem);letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);}
+/* hamburger for mobile */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--gold);border-radius:2px;transition:all 0.3s;}
+.mobile-menu{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;
+  background:rgba(10,3,0,0.97);flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{color:var(--light-gold);text-decoration:none;font-size:1.3rem;letter-spacing:0.2em;text-transform:uppercase;font-family:'Noto Serif Tamil',serif;}
+.mobile-menu-close{position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;color:var(--gold);font-size:2rem;cursor:pointer;}
+@media(max-width:640px){
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+}
+ 
+/* main content */
+#main-content{opacity:0;transition:opacity 0.8s ease;}
+#main-content.visible{opacity:1;}
+ 
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  background:radial-gradient(ellipse at 60% 40%,#4a1e00 0%,#1a0a00 70%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;position:relative;overflow:hidden;
+  padding:2rem 1.2rem;padding-top:100px;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 20% 20%,rgba(200,146,42,0.15) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(200,146,42,0.1) 0%,transparent 50%);
+}
+.om-symbol{font-size:clamp(2.5rem,6vw,3.5rem);color:var(--gold);animation:float 3s ease-in-out infinite;margin-bottom:0.5rem;filter:drop-shadow(0 0 20px rgba(200,146,42,0.6));position:relative;z-index:1;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.deity-line{font-size:clamp(0.7rem,1.8vw,0.9rem);color:var(--light-gold);letter-spacing:0.1em;margin-bottom:1.5rem;opacity:0.8;position:relative;z-index:1;padding:0 0.5rem;}
+.hero-title{font-family:'Noto Serif Tamil',serif;font-size:clamp(1.3rem,4vw,2.6rem);font-weight:700;color:var(--light-gold);line-height:1.4;text-shadow:0 2px 20px rgba(200,146,42,0.4);max-width:720px;animation:fadeUp 1s ease both;margin-bottom:1rem;position:relative;z-index:1;}
+.divider-ornament{width:min(200px,60%);height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:1rem auto;position:relative;z-index:1;}
+.divider-ornament::before{content:'✦';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--gold);font-size:1rem;background:#1a0a00;padding:0 0.5rem;}
+.hero-names{font-size:clamp(0.9rem,2.5vw,1.4rem);color:var(--cream);line-height:2;animation:fadeUp 1s 0.2s ease both;position:relative;z-index:1;}
+.hero-names span{color:var(--light-gold);font-weight:700;}
+.hero-date{margin-top:1.5rem;background:rgba(200,146,42,0.15);border:1px solid rgba(200,146,42,0.4);border-radius:8px;padding:0.8rem 1.5rem;font-size:clamp(0.78rem,2vw,1rem);color:var(--light-gold);animation:fadeUp 1s 0.4s ease both;position:relative;z-index:1;line-height:1.7;}
+.scroll-hint{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);color:var(--gold);opacity:0.6;font-size:0.78rem;letter-spacing:0.2em;animation:bounce 2s infinite;white-space:nowrap;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+ 
+/* ── SECTIONS ── */
+.section{padding:clamp(3rem,6vw,5rem) clamp(1rem,4vw,1.5rem);}
+.section-alt{background:var(--cream);}
+.section-dark{background:linear-gradient(135deg,#1a0a00,#2C1A05);color:var(--cream);}
+.section-gold{background:linear-gradient(135deg,#FDF6E3,#F5E8C0);}
+.section-inner{max-width:900px;margin:0 auto;}
+.section-tag{display:inline-block;font-size:0.68rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);border-top:1px solid var(--gold);padding-top:0.4rem;margin-bottom:0.8rem;}
+.section-dark .section-tag{color:var(--light-gold);border-color:var(--light-gold);}
+.section-heading{font-family:'Noto Serif Tamil',serif;font-size:clamp(1.2rem,3vw,2rem);font-weight:700;color:var(--dark);margin-bottom:1.5rem;line-height:1.3;}
+.section-dark .section-heading{color:var(--light-gold);}
+ 
+/* ── SCHEDULE ── */
+.schedule-grid{display:flex;flex-direction:column;gap:1.2rem;}
+.event-card{
+  background:#fff;border-radius:12px;border-left:5px solid var(--gold);
+  padding:clamp(1rem,3vw,1.5rem) clamp(1rem,3vw,2rem);
+  box-shadow:0 4px 20px rgba(0,0,0,0.07);
+  display:grid;grid-template-columns:auto 1fr;gap:0.8rem 1.2rem;align-items:start;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.event-card:hover{transform:translateX(4px);box-shadow:0 8px 30px rgba(0,0,0,0.1);}
+.event-card.highlight{border-left-color:var(--rust);background:linear-gradient(135deg,#FFF8F0,#fff);}
+.event-date-badge{background:var(--gold);color:#fff;border-radius:8px;padding:0.45rem 0.7rem;text-align:center;font-size:clamp(0.65rem,1.5vw,0.78rem);font-weight:700;white-space:nowrap;line-height:1.5;}
+.event-card.highlight .event-date-badge{background:var(--rust);}
+.event-title{font-size:clamp(0.9rem,2.5vw,1.05rem);font-weight:700;color:var(--dark);margin-bottom:0.25rem;}
+.event-time{font-size:clamp(0.75rem,2vw,0.85rem);color:var(--gold);font-weight:600;margin-bottom:0.35rem;}
+.event-desc{font-size:clamp(0.78rem,1.8vw,0.88rem);color:#555;line-height:1.7;}
+@media(max-width:480px){.event-card{grid-template-columns:1fr;}.event-date-badge{display:inline-block;margin-bottom:0.4rem;}}
+ 
+/* ── VENUE ── */
+.venue-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:1.2rem;margin-bottom:1.5rem;}
+.venue-card{background:rgba(255,255,255,0.07);border:1px solid rgba(200,146,42,0.3);border-radius:12px;padding:clamp(1.2rem,3vw,1.8rem);transition:border-color 0.3s,background 0.3s;}
+.venue-card:hover{border-color:var(--gold);background:rgba(200,146,42,0.08);}
+.venue-icon{font-size:1.8rem;margin-bottom:0.7rem;}
+.venue-name{font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:700;color:var(--light-gold);margin-bottom:0.5rem;}
+.venue-address{font-size:clamp(0.78rem,1.8vw,0.85rem);color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:0.6rem;}
+.venue-detail{font-size:clamp(0.72rem,1.6vw,0.8rem);color:rgba(255,255,255,0.6);line-height:1.8;}
+.map-btn{display:inline-block;margin-top:0.8rem;padding:0.45rem 1.1rem;background:transparent;border:1px solid var(--gold);border-radius:50px;color:var(--light-gold);font-size:0.78rem;text-decoration:none;letter-spacing:0.08em;transition:all 0.2s;font-family:'Noto Serif Tamil',serif;}
+.map-btn:hover,.map-btn:active{background:var(--gold);color:#fff;}
+ 
+/* map static replacement */
+.map-static{
+  border-radius:12px;overflow:hidden;border:2px solid rgba(200,146,42,0.3);margin-top:1.5rem;
+  background:linear-gradient(135deg,#1a0a00,#2C1A05);
+  padding:clamp(1.5rem,4vw,2.5rem);text-align:center;
+}
+.map-static-icon{font-size:clamp(2.5rem,6vw,3.5rem);margin-bottom:1rem;}
+.map-static-title{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--light-gold);font-weight:700;margin-bottom:0.5rem;}
+.map-static-addr{font-size:clamp(0.78rem,2vw,0.9rem);color:rgba(255,255,255,0.7);line-height:1.8;margin-bottom:1.5rem;}
+.map-open-btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.8rem 1.8rem;background:var(--gold);color:#fff;text-decoration:none;
+  border-radius:50px;font-size:clamp(0.82rem,2vw,0.9rem);font-weight:700;letter-spacing:0.08em;
+  transition:all 0.2s;font-family:'Noto Serif Tamil',serif;border:none;cursor:pointer;
+}
+.map-open-btn:hover,.map-open-btn:active{background:var(--deep-gold);transform:scale(1.03);}
+.map-open-btn.secondary{background:transparent;border:1px solid var(--gold);color:var(--light-gold);margin-left:0.8rem;}
+.map-open-btn.secondary:hover{background:var(--gold);color:#fff;}
+.map-btn-row{display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;margin-top:1rem;}
+ 
+/* ── STAY ── */
+.stay-card{background:#fff;border-radius:12px;padding:clamp(1.2rem,3vw,1.8rem);box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+.stay-icon{font-size:1.8rem;margin-bottom:0.7rem;}
+.stay-name{font-weight:700;font-size:clamp(0.95rem,2.5vw,1.05rem);color:var(--dark);margin-bottom:0.5rem;}
+.stay-desc{font-size:clamp(0.78rem,1.8vw,0.85rem);color:#555;line-height:1.8;}
+ 
+/* ── MEALS ── */
+.meals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1rem;}
+.meal-card{background:linear-gradient(135deg,var(--deep-gold),var(--orange));border-radius:12px;padding:clamp(1rem,3vw,1.3rem) clamp(1rem,3vw,1.5rem);color:#fff;text-align:center;}
+.meal-date{font-size:clamp(0.65rem,1.5vw,0.72rem);letter-spacing:0.12em;text-transform:uppercase;opacity:0.85;margin-bottom:0.4rem;}
+.meal-type{font-size:clamp(0.85rem,2vw,1rem);font-weight:700;margin-bottom:0.3rem;}
+.meal-venue{font-size:clamp(0.75rem,1.8vw,0.82rem);opacity:0.9;}
+ 
+/* ── FAMILY ── */
+.family-names{display:flex;flex-wrap:wrap;gap:0.7rem;justify-content:center;margin-top:1.5rem;}
+.family-pill{background:rgba(200,146,42,0.12);border:1px solid var(--gold);border-radius:50px;padding:0.4rem 1.1rem;font-size:clamp(0.8rem,2vw,0.9rem);color:var(--dark);font-weight:600;}
+.star-row{color:var(--gold);font-size:1.1rem;letter-spacing:0.5rem;text-align:center;margin:0.8rem 0;}
+.text-center{text-align:center;}
+ 
+/* ── FOOTER ── */
+footer{background:#0d0500;color:rgba(255,255,255,0.5);text-align:center;padding:clamp(1.5rem,4vw,2.5rem) 1rem;font-size:clamp(0.72rem,1.8vw,0.82rem);letter-spacing:0.08em;border-top:1px solid rgba(200,146,42,0.2);}
+footer .gold{color:var(--gold);}
+</style>
+</head>
+<body>
+ 
+<!-- ══ LANGUAGE PICKER ══ -->
+<div id="lang-screen">
+  <div class="lang-om">ॐ</div>
+  <div class="lang-title">சஷ்டியப்த பூர்த்தி சாந்தி</div>
+  <div class="lang-subtitle">Sashtiapthapoorthi Celebration</div>
+  <div class="lang-divider"></div>
+  <div class="lang-prompt">Choose your language / மொழியை தேர்வு செய்யவும்</div>
+  <div class="lang-btns">
+    <button class="lang-btn" onclick="chooseLang('ta')">தமிழ்</button>
+    <button class="lang-btn" onclick="chooseLang('en')" style="font-family:'EB Garamond',serif;font-size:1.05rem;">English</button>
+  </div>
+</div>
+ 
+<!-- ══ STICKY COUNTDOWN ══ -->
+<div id="sticky-countdown">
+  <div class="cd-label" id="cd-label-text">நிகழ்ச்சிக்கு இன்னும்</div>
+  <div class="cd-boxes">
+    <div class="cd-box"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl" id="cd-lbl-d">நாட்கள்</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl" id="cd-lbl-h">மணி</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl" id="cd-lbl-m">நிமிடம்</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl" id="cd-lbl-s">வினாடி</div></div>
+  </div>
+</div>
+ 
+<!-- ══ NAV ══ -->
+<nav id="main-nav" class="at-top">
+  <div class="nav-brand" id="nav-brand">✦ சஷ்டியப்த பூர்த்தி</div>
+  <div class="nav-links">
+    <a href="#schedule" data-i="0">நிகழ்ச்சி</a>
+    <a href="#venue" data-i="1">இடம்</a>
+    <a href="#stay" data-i="2">தங்குமிடம்</a>
+    <a href="#food" data-i="3">உணவு</a>
+    <a href="#family" data-i="4">குடும்பம்</a>
+  </div>
+  <button class="nav-hamburger" onclick="openMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+ 
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-menu-close" onclick="closeMenu()">✕</button>
+  <a href="#schedule" data-mi="0" onclick="closeMenu()">நிகழ்ச்சி</a>
+  <a href="#venue" data-mi="1" onclick="closeMenu()">இடம்</a>
+  <a href="#stay" data-mi="2" onclick="closeMenu()">தங்குமிடம்</a>
+  <a href="#food" data-mi="3" onclick="உணவு">உணவு</a>
+  <a href="#family" data-mi="4" onclick="closeMenu()">குடும்பம்</a>
+</div>
+ 
+<!-- ══ MAIN CONTENT ══ -->
+<div id="main-content">
+ 
+<!-- HERO -->
+<section class="hero">
+  <div class="om-symbol">ॐ</div>
+  <div class="deity-line" id="hero-deity">ஸ்ரீ சிறுகிராமம் முத்துமாரியம்மன் துணை &nbsp;|&nbsp; ஸ்ரீ வாசவி சகாயம்</div>
+  <h1 class="hero-title" id="hero-title">சஷ்டியப்த பூர்த்தி சாந்தி சுபமுகூர்த்தப் பத்திரிகை</h1>
+  <div class="divider-ornament"></div>
+  <p class="hero-names" id="hero-names">
+    எங்களது தகப்பனார்<br>
+    <span>திருவாளர் S.V.R. சுரேஷ் செட்டியார்</span><br>
+    அவர்களுக்கு சஷ்டியப்த பூர்த்தியும்,<br><br>
+    எங்களது தாயார்<br>
+    <span>திருமதி G. ஸ்வர்ணலதா</span><br>
+    அவர்களுக்கு திருமாங்கல்ய தாரண சுபமுகூர்த்தமும்
+  </p>
+  <div class="hero-date" id="hero-date">📅 &nbsp; ஆணி மாதம் 12ம் தேதி &nbsp;|&nbsp; 26 ஜூன் 2026, வெள்ளிக்கிழமை &nbsp;|&nbsp; விசாக நட்சத்திரம்</div>
+  <div class="scroll-hint" id="scroll-hint">↓ &nbsp; மேலும் காண &nbsp; ↓</div>
+</section>
+ 
+<!-- SCHEDULE -->
+<section class="section section-alt" id="schedule">
+  <div class="section-inner">
+    <div class="section-tag" id="tag-schedule">நிகழ்ச்சி நிரல்</div>
+    <h2 class="section-heading" id="head-schedule">நிகழ்ச்சி விவரங்கள்</h2>
+    <div class="schedule-grid">
+      <div class="event-card">
+        <div class="event-date-badge" id="badge1">ஜூன் 25<br>வியாழன்</div>
+        <div>
+          <div class="event-title" id="ev1-title">முதல் காலா பூஜை</div>
+          <div class="event-time" id="ev1-time">மாலை 6:00 மணி – 8:30 மணி</div>
+          <div class="event-desc"><span id="ev1-desc">முதல் கால யாக பூஜை நிகழ்வு.</span><br><strong id="ev1-loc">இடம்: பிச்சைக்கட்டளை மண்டபம், தரும்புரம் ஆதினத்திற்கு சொந்தமான திருக்கடையூர் அமிர்தகடேஸ்வரர் ஆலயம்</strong></div>
+        </div>
+      </div>
+      <div class="event-card highlight">
+        <div class="event-date-badge" id="badge2">ஜூன் 26<br>வெள்ளி</div>
+        <div>
+          <div class="event-title" id="ev2-title">ஸ்வர்ணமாங்கல்ய தாரணம் 🪔</div>
+          <div class="event-time" id="ev2-time">காலை 6:00 மணி – பூர்ணாஹூதி | காலை 9:00 – 10:15 சுபமுகூர்த்தம்</div>
+          <div class="event-desc"><strong id="ev2-loc">இடம்: பிச்சைக்கட்டளை மண்டபம், அமிர்தகடேஸ்வரர் ஆலயம், திருக்கடையூர்</strong><br><span id="ev2-desc">தீர்த்தாபிஷேகம் மற்றும் சுபமுகூர்த்தம்.</span></div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-date-badge" id="badge3">ஜூன் 26<br>வெள்ளி</div>
+        <div>
+          <div class="event-title" id="ev3-title">வரவேற்பு விழா 🎉</div>
+          <div class="event-time" id="ev3-time">காலை 11:00 மணி – மதியம் 1:00 மணி</div>
+          <div class="event-desc"><strong id="ev3-loc">இடம்: ஹோட்டல் மணிவிழா (பார்ட்டி ஹால்), திருக்கடையூர்</strong><br><span id="ev3-desc">உணவு விருந்தும் நடைபெறும்.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- VENUE -->
+<section class="section section-dark" id="venue">
+  <div class="section-inner">
+    <div class="section-tag" id="tag-venue">இடம் & வழிகாட்டி</div>
+    <h2 class="section-heading" id="head-venue">நிகழ்ச்சி நடைபெறும் இடங்கள்</h2>
+    <div class="venue-cards">
+      <div class="venue-card">
+        <div class="venue-icon">🛕</div>
+        <div class="venue-name" id="v1-name">அமிர்தகடேஸ்வரர் ஆலயம்</div>
+        <div class="venue-address" id="v1-addr">பிச்சைக்கட்டளை மண்டபம்<br>Sannathi St, Thirukadaiyur, TN – 609 311</div>
+        <div class="venue-detail" id="v1-detail">⭐ 4.6/5 &nbsp;|&nbsp; 📍 தரும்புரம் ஆதினம்<br>🕘 காலை 6:00 – மதியம் 1:00, மாலை 4:00 – 8:30</div>
+        <a class="map-btn" href="https://maps.google.com/?q=Amritaghateswarar+Temple+Thirukkadaiyur" target="_blank" id="v1-btn">📍 வழிகாட்டல் பெறுக</a>
+      </div>
+      <div class="venue-card">
+        <div class="venue-icon">🏨</div>
+        <div class="venue-name" id="v2-name">ஹோட்டல் மணிவிழா</div>
+        <div class="venue-address" id="v2-addr">Sannathi St, Thirukadaiyur, TN – 609 311<br><span id="v2-opp">(ஆலயத்திற்கு எதிரில்)</span></div>
+        <div class="venue-detail">⭐ 4.3/5 &nbsp;|&nbsp; 📞 +91 94437 41451<br>🕐 24 மணி நேரமும் திறந்திருக்கும்</div>
+        <a class="map-btn" href="https://maps.google.com/?q=Hotel+Manivizha+Thirukkadaiyur" target="_blank" id="v2-btn">📍 வழிகாட்டல் பெறுக</a>
+      </div>
+    </div>
+ 
+    <!-- MAP REPLACEMENT — no iframe -->
+    <div class="map-static">
+      <div class="map-static-icon">🗺️</div>
+      <div class="map-static-title" id="map-title">பிச்சைக்கட்டளை மண்டபம், திருக்கடையூர்</div>
+      <div class="map-static-addr" id="map-addr">
+        அமிர்தகடேஸ்வரர் ஆலயம், Sannathi Street,<br>
+        Thirukadaiyur, Tamil Nadu – 609 311<br>
+        (அருகில்: மயிலாடுதுறை – 20 கி.மீ)
+      </div>
+      <div class="map-btn-row">
+        <a class="map-open-btn" href="https://maps.google.com/?q=Amritaghateswarar+Temple+Thirukkadaiyur" target="_blank" id="map-btn1">
+          🗺 Google Maps
+        </a>
+        <a class="map-open-btn secondary" href="https://maps.apple.com/?q=Amritaghateswarar+Temple+Thirukkadaiyur" target="_blank" id="map-btn2">
+          🍎 Apple Maps
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- STAY -->
+<section class="section section-gold" id="stay">
+  <div class="section-inner">
+    <div class="section-tag" id="tag-stay">தங்குமிடம்</div>
+    <h2 class="section-heading" id="head-stay">தங்கும் வசதி</h2>
+    <div class="venue-cards">
+      <div class="stay-card">
+        <div class="stay-icon">🏨</div>
+        <div class="stay-name" id="s1-name">ஹோட்டல் குரு</div>
+        <div class="stay-desc" id="s1-desc">ஹோட்டல் மணிவிழாவிற்கு எதிரில், Thirukkadaiyur<br><br>தங்கும் வசதிக்கு ஏற்பாடு செய்யப்பட்டுள்ளது. முன்னதாக தொடர்பு கொண்டு அறை பதிவு செய்துகொள்ளவும்.</div>
+        <a class="map-btn" style="border-color:var(--gold);color:var(--deep-gold);" href="https://maps.google.com/?q=Hotel+Guru+Thirukkadaiyur" target="_blank" id="s1-btn">📍 வழிகாட்டல் பெறுக</a>
+      </div>
+      <div class="stay-card">
+        <div class="stay-icon">🏨</div>
+        <div class="stay-name" id="s2-name">ஹோட்டல் மணிவிழா</div>
+        <div class="stay-desc" id="s2-desc">Sannathi St, Thirukadaiyur<br>📞 +91 94437 41451<br><br>ஆலயத்திற்கு மிக அருகில் உள்ளது. விழாவின் விருந்து நிகழ்வுகளும் இங்கே நடைபெறும்.</div>
+        <a class="map-btn" style="border-color:var(--gold);color:var(--deep-gold);" href="tel:+919443741451" id="s2-btn">📞 அழைக்கவும்</a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- FOOD -->
+<section class="section section-dark" id="food">
+  <div class="section-inner">
+    <div class="section-tag" id="tag-food" style="color:var(--light-gold);border-color:var(--light-gold)">உணவு அட்டவணை</div>
+    <h2 class="section-heading" id="head-food" style="color:var(--light-gold)">உணவு வசதி</h2>
+    <div class="meals-grid">
+      <div class="meal-card">
+        <div class="meal-date" id="m1-date">25 ஜூன் 2026 – காலை</div>
+        <div class="meal-type" id="m1-type">காலை உணவு</div>
+        <div class="meal-venue" id="m1-venue">விருத்தகிரீஸ்வரர் கோவில், விருத்தாசலம்</div>
+      </div>
+      <div class="meal-card" style="background:linear-gradient(135deg,var(--rust),#c05010)">
+        <div class="meal-date" id="m2-date">25 ஜூன் 2026 – மதியம் & இரவு</div>
+        <div class="meal-type" id="m2-type">மதிய உணவு, சிற்றுண்டி & இரவு உணவு</div>
+        <div class="meal-venue" id="m2-venue">ஹோட்டல் மணிவிழா, திருக்கடையூர்</div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-date" id="m3-date">26 ஜூன் 2026 – காலை & மதியம்</div>
+        <div class="meal-type" id="m3-type">காலை & மதிய உணவு</div>
+        <div class="meal-venue" id="m3-venue">ஹோட்டல் மணிவிழா, திருக்கடையூர்</div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- FAMILY -->
+<section class="section section-gold" id="family">
+  <div class="section-inner text-center">
+    <div class="section-tag" id="tag-family" style="display:block;text-align:center;">குடும்பத்தினர்</div>
+    <h2 class="section-heading" id="head-family">நல்வருகையை நாடும் குடும்பத்தினர்</h2>
+    <div class="star-row">✦ ✦ ✦</div>
+    <div class="family-names">
+      <div class="family-pill">மகன் S. தனுஷ் சூர்யா, P.G.D.M.</div>
+      <div class="family-pill">மருமகள் S. வைஷாலி, M.B.A.</div>
+      <div class="family-pill">மகன் S. மிதிலேஷ்வர், B.E.</div>
+      <div class="family-pill">மகன் R.S. தன்வந்த், B.E.</div>
+    </div>
+    <p style="margin-top:1.5rem;font-size:clamp(0.85rem,2vw,0.95rem);color:#555;line-height:1.8;" id="family-note">
+      தங்கள் தங்கள் சுற்றமும் நட்பும் சூழ வருகைதந்து சிறப்பிக்க வேண்டுகிறோம்.<br>
+      <strong>களளாக்குறிச்சி</strong>
+    </p>
+    <div class="star-row" style="margin-top:0.8rem;">✦ ✦ ✦</div>
+  </div>
+</section>
+ 
+<footer>
+  <div class="gold" style="font-size:1.4rem;margin-bottom:0.5rem;">ॐ</div>
+  <div class="gold" id="footer-title" style="font-size:clamp(0.8rem,2vw,0.9rem);margin-bottom:0.4rem;">சஷ்டியப்த பூர்த்தி சாந்தி – ஜூன் 26, 2026</div>
+  <div>S.V.R. சுரேஷ் செட்டியார் & G. ஸ்வர்ணலதா</div>
+  <div style="margin-top:0.4rem;font-size:0.68rem;opacity:0.45;" id="footer-venue">பிச்சைக்கட்டளை மண்டபம், அமிர்தகடேஸ்வரர் ஆலயம், திருக்கடையூர்</div>
+</footer>
+</div><!-- end main-content -->
+ 
+<script>
+/* ── TRANSLATIONS ── */
+const T = {
+  ta:{
+    navBrand:'✦ சஷ்டியப்த பூர்த்தி',
+    herDeity:'ஸ்ரீ சிறுகிராமம் முத்துமாரியம்மன் துணை &nbsp;|&nbsp; ஸ்ரீ வாசவி சகாயம்',
+    heroTitle:'சஷ்டியப்த பூர்த்தி சாந்தி சுபமுகூர்த்தப் பத்திரிகை',
+    heroNames:`எங்களது தகப்பனார்<br><span>திருவாளர் S.V.R. சுரேஷ் செட்டியார்</span><br>அவர்களுக்கு சஷ்டியப்த பூர்த்தியும்,<br><br>எங்களது தாயார்<br><span>திருமதி G. ஸ்வர்ணலதா</span><br>அவர்களுக்கு திருமாங்கல்ய தாரண சுபமுகூர்த்தமும்`,
+    heroDate:'📅 &nbsp; ஆணி மாதம் 12ம் தேதி &nbsp;|&nbsp; 26 ஜூன் 2026, வெள்ளிக்கிழமை &nbsp;|&nbsp; விசாக நட்சத்திரம்',
+    scrollHint:'↓ &nbsp; மேலும் காண &nbsp; ↓',
+    cdLabel:'நிகழ்ச்சிக்கு இன்னும்', cdD:'நாட்கள்', cdH:'மணி', cdM:'நிமிடம்', cdS:'வினாடி',
+    tagSchedule:'நிகழ்ச்சி நிரல்', headSchedule:'நிகழ்ச்சி விவரங்கள்',
+    badge1:'ஜூன் 25<br>வியாழன்', badge2:'ஜூன் 26<br>வெள்ளி', badge3:'ஜூன் 26<br>வெள்ளி',
+    ev1Title:'முதல் காலா பூஜை', ev1Time:'மாலை 6:00 மணி – 8:30 மணி',
+    ev1Desc:'முதல் கால யாக பூஜை நிகழ்வு.', ev1Loc:'இடம்: பிச்சைக்கட்டளை மண்டபம், தரும்புரம் ஆதினத்திற்கு சொந்தமான திருக்கடையூர் அமிர்தகடேஸ்வரர் ஆலயம்',
+    ev2Title:'ஸ்வர்ணமாங்கல்ய தாரணம் 🪔', ev2Time:'காலை 6:00 மணி – பூர்ணாஹூதி | காலை 9:00 – 10:15 சுபமுகூர்த்தம்',
+    ev2Loc:'இடம்: பிச்சைக்கட்டளை மண்டபம், அமிர்தகடேஸ்வரர் ஆலயம், திருக்கடையூர்', ev2Desc:'தீர்த்தாபிஷேகம் மற்றும் சுபமுகூர்த்தம்.',
+    ev3Title:'வரவேற்பு விழா 🎉', ev3Time:'காலை 11:00 மணி – மதியம் 1:00 மணி',
+    ev3Loc:'இடம்: ஹோட்டல் மணிவிழா (பார்ட்டி ஹால்), திருக்கடையூர்', ev3Desc:'உணவு விருந்தும் நடைபெறும்.',
+    tagVenue:'இடம் & வழிகாட்டி', headVenue:'நிகழ்ச்சி நடைபெறும் இடங்கள்',
+    v1Name:'அமிர்தகடேஸ்வரர் ஆலயம்', v1Addr:'பிச்சைக்கட்டளை மண்டபம்<br>Sannathi St, Thirukadaiyur, TN – 609 311',
+    v1Detail:'⭐ 4.6/5 &nbsp;|&nbsp; 📍 தரும்புரம் ஆதினம்<br>🕘 காலை 6:00 – மதியம் 1:00, மாலை 4:00 – 8:30',
+    v1Btn:'📍 வழிகாட்டல் பெறுக',
+    v2Name:'ஹோட்டல் மணிவிழா', v2Addr:'Sannathi St, Thirukadaiyur, TN – 609 311', v2Opp:'(ஆலயத்திற்கு எதிரில்)', v2Btn:'📍 வழிகாட்டல் பெறுக',
+    mapTitle:'பிச்சைக்கட்டளை மண்டபம், திருக்கடையூர்',
+    mapAddr:'அமிர்தகடேஸ்வரர் ஆலயம், Sannathi Street,<br>Thirukadaiyur, Tamil Nadu – 609 311<br>(அருகில்: மயிலாடுதுறை – 20 கி.மீ)',
+    mapBtn1:'🗺 Google Maps', mapBtn2:'🍎 Apple Maps',
+    tagStay:'தங்குமிடம்', headStay:'தங்கும் வசதி',
+    s1Name:'ஹோட்டல் குரு', s1Desc:'ஹோட்டல் மணிவிழாவிற்கு எதிரில், Thirukkadaiyur<br><br>தங்கும் வசதிக்கு ஏற்பாடு செய்யப்பட்டுள்ளது. முன்னதாக தொடர்பு கொண்டு அறை பதிவு செய்துகொள்ளவும்.', s1Btn:'📍 வழிகாட்டல் பெறுக',
+    s2Name:'ஹோட்டல் மணிவிழா', s2Desc:'Sannathi St, Thirukadaiyur<br>📞 +91 94437 41451<br><br>ஆலயத்திற்கு மிக அருகில் உள்ளது. விழாவின் விருந்து நிகழ்வுகளும் இங்கே நடைபெறும்.', s2Btn:'📞 அழைக்கவும்',
+    tagFood:'உணவு அட்டவணை', headFood:'உணவு வசதி',
+    m1Date:'25 ஜூன் 2026 – காலை', m1Type:'காலை உணவு', m1Venue:'விருத்தகிரீஸ்வரர் கோவில், விருத்தாசலம்',
+    m2Date:'25 ஜூன் 2026 – மதியம் & இரவு', m2Type:'மதிய உணவு, சிற்றுண்டி & இரவு உணவு', m2Venue:'ஹோட்டல் மணிவிழா, திருக்கடையூர்',
+    m3Date:'26 ஜூன் 2026 – காலை & மதியம்', m3Type:'காலை & மதிய உணவு', m3Venue:'ஹோட்டல் மணிவிழா, திருக்கடையூர்',
+    tagFamily:'குடும்பத்தினர்', headFamily:'நல்வருகையை நாடும் குடும்பத்தினர்',
+    familyNote:'தங்கள் தங்கள் சுற்றமும் நட்பும் சூழ வருகைதந்து சிறப்பிக்க வேண்டுகிறோம்.<br><strong>களளாக்குறிச்சி</strong>',
+    footerTitle:'சஷ்டியப்த பூர்த்தி சாந்தி – ஜூன் 26, 2026',
+    footerVenue:'பிச்சைக்கட்டளை மண்டபம், அமிர்தகடேஸ்வரர் ஆலயம், திருக்கடையூர்',
+    navLinks:['நிகழ்ச்சி','இடம்','தங்குமிடம்','உணவு','குடும்பம்'],
+    cdDone:'🎉 விழா நேரம் ஆகிவிட்டது!'
+  },
+  en:{
+    navBrand:'✦ Sashtiapthapoorthi',
+    herDeity:'Blessings of Sri Sirukkiramam Muthumariyamman &nbsp;|&nbsp; Sri Vasavi Sahayam',
+    heroTitle:'Sashtiapthapoorthi Shanthi — Auspicious Invitation',
+    heroNames:`Our beloved Father<br><span>Thiru S.V.R. Suresh Chettiar</span><br>Sashtiapthapoorthi (60th Birthday) &amp;<br><br>Our beloved Mother<br><span>Thirumathi G. Swarnalatha</span><br>Thirumaangalya Dharana Auspicious Ceremony`,
+    heroDate:'📅 &nbsp; Aani Month, 12th Day &nbsp;|&nbsp; 26 June 2026, Friday &nbsp;|&nbsp; Vishaka Star',
+    scrollHint:'↓ &nbsp; Scroll to explore &nbsp; ↓',
+    cdLabel:'Countdown to the Celebration', cdD:'Days', cdH:'Hours', cdM:'Mins', cdS:'Secs',
+    tagSchedule:'Programme', headSchedule:'Event Schedule',
+    badge1:'June 25<br>Thursday', badge2:'June 26<br>Friday', badge3:'June 26<br>Friday',
+    ev1Title:'First Session Pooja', ev1Time:'Evening 6:00 PM – 8:30 PM',
+    ev1Desc:'First kala yaga pooja ceremony.', ev1Loc:'Venue: Pichakattalai Hall, Amirtha Kadeeswara Temple, Thirukkadaiyur (Dharampuram Adeenam)',
+    ev2Title:'Swarna Maangalya Dharanam 🪔', ev2Time:'Morning 6:00 AM onwards | Auspicious time: 9:00 – 10:15 AM',
+    ev2Loc:'Venue: Pichakattalai Hall, Amirtha Kadeeswara Temple, Thirukkadaiyur', ev2Desc:'Theerthabishegam and auspicious ceremony.',
+    ev3Title:'Reception 🎉', ev3Time:'11:00 AM – 1:00 PM',
+    ev3Loc:'Venue: Hotel Manivizha (Party Hall), Thirukkadaiyur', ev3Desc:'Lunch reception for all guests.',
+    tagVenue:'Venue & Directions', headVenue:'Event Venues',
+    v1Name:'Amirtha Kadeeswara Temple', v1Addr:'Pichakattalai Hall<br>Sannathi St, Thirukadaiyur, TN – 609 311',
+    v1Detail:'⭐ 4.6/5 &nbsp;|&nbsp; 📍 Dharampuram Adeenam<br>🕘 Open: 6:00 AM – 1:00 PM, 4:00 – 8:30 PM',
+    v1Btn:'📍 Get Directions',
+    v2Name:'Hotel Manivizha', v2Addr:'Sannathi St, Thirukadaiyur, TN – 609 311', v2Opp:'(Opposite the Temple)', v2Btn:'📍 Get Directions',
+    mapTitle:'Pichakattalai Hall, Thirukkadaiyur',
+    mapAddr:'Amirtha Kadeeswara Temple, Sannathi Street,<br>Thirukadaiyur, Tamil Nadu – 609 311<br>(Nearest town: Mayiladuthurai – 20 km)',
+    mapBtn1:'🗺 Google Maps', mapBtn2:'🍎 Apple Maps',
+    tagStay:'Accommodation', headStay:'Stay Options',
+    s1Name:'Hotel Guru', s1Desc:'Opposite Hotel Manivizha, Thirukkadaiyur<br><br>Accommodation has been arranged. Please book your room in advance.', s1Btn:'📍 Get Directions',
+    s2Name:'Hotel Manivizha', s2Desc:'Sannathi St, Thirukkadaiyur<br>📞 +91 94437 41451<br><br>Very close to the temple. Lunch reception will also be held here.', s2Btn:'📞 Call',
+    tagFood:'Meals', headFood:'Food Arrangements',
+    m1Date:'25 June 2026 – Morning', m1Type:'Breakfast', m1Venue:'Virudhagireeswarar Temple, Virudhachalam',
+    m2Date:'25 June 2026 – Afternoon & Night', m2Type:'Lunch, Snacks & Dinner', m2Venue:'Hotel Manivizha, Thirukkadaiyur',
+    m3Date:'26 June 2026 – Morning & Afternoon', m3Type:'Breakfast & Lunch', m3Venue:'Hotel Manivizha, Thirukkadaiyur',
+    tagFamily:'Family', headFamily:'Cordially Inviting You',
+    familyNote:'We request the presence of your family and friends to grace this auspicious occasion.<br><strong>Kallakurichi</strong>',
+    footerTitle:'Sashtiapthapoorthi Celebration – June 26, 2026',
+    footerVenue:'Pichakattalai Hall, Amirtha Kadeeswara Temple, Thirukkadaiyur',
+    navLinks:['Schedule','Venue','Stay','Food','Family'],
+    cdDone:'🎉 The celebration has begun!'
+  }
+};
+ 
+function applyLang(lang){
+  const t=T[lang];
+  const s=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h;};
+  s('nav-brand',t.navBrand); s('hero-deity',t.herDeity); s('hero-title',t.heroTitle);
+  s('hero-names',t.heroNames); s('hero-date',t.heroDate); s('scroll-hint',t.scrollHint);
+  s('cd-label-text',t.cdLabel); s('cd-lbl-d',t.cdD); s('cd-lbl-h',t.cdH); s('cd-lbl-m',t.cdM); s('cd-lbl-s',t.cdS);
+  s('tag-schedule',t.tagSchedule); s('head-schedule',t.headSchedule);
+  s('badge1',t.badge1); s('badge2',t.badge2); s('badge3',t.badge3);
+  s('ev1-title',t.ev1Title); s('ev1-time',t.ev1Time); s('ev1-desc',t.ev1Desc); s('ev1-loc',t.ev1Loc);
+  s('ev2-title',t.ev2Title); s('ev2-time',t.ev2Time); s('ev2-desc',t.ev2Desc); s('ev2-loc',t.ev2Loc);
+  s('ev3-title',t.ev3Title); s('ev3-time',t.ev3Time); s('ev3-desc',t.ev3Desc); s('ev3-loc',t.ev3Loc);
+  s('tag-venue',t.tagVenue); s('head-venue',t.headVenue);
+  s('v1-name',t.v1Name); s('v1-addr',t.v1Addr); s('v1-detail',t.v1Detail); s('v1-btn',t.v1Btn);
+  s('v2-name',t.v2Name); s('v2-addr',t.v2Addr); s('v2-opp',t.v2Opp); s('v2-btn',t.v2Btn);
+  s('map-title',t.mapTitle); s('map-addr',t.mapAddr); s('map-btn1',t.mapBtn1); s('map-btn2',t.mapBtn2);
+  s('tag-stay',t.tagStay); s('head-stay',t.headStay);
+  s('s1-name',t.s1Name); s('s1-desc',t.s1Desc); s('s1-btn',t.s1Btn);
+  s('s2-name',t.s2Name); s('s2-desc',t.s2Desc); s('s2-btn',t.s2Btn);
+  s('tag-food',t.tagFood); s('head-food',t.headFood);
+  s('m1-date',t.m1Date); s('m1-type',t.m1Type); s('m1-venue',t.m1Venue);
+  s('m2-date',t.m2Date); s('m2-type',t.m2Type); s('m2-venue',t.m2Venue);
+  s('m3-date',t.m3Date); s('m3-type',t.m3Type); s('m3-venue',t.m3Venue);
+  s('tag-family',t.tagFamily); s('head-family',t.headFamily); s('family-note',t.familyNote);
+  s('footer-title',t.footerTitle); s('footer-venue',t.footerVenue);
+  document.querySelectorAll('.nav-links a').forEach((a,i)=>{if(t.navLinks[i])a.textContent=t.navLinks[i];});
+  document.querySelectorAll('.mobile-menu a').forEach((a,i)=>{if(t.navLinks[i])a.textContent=t.navLinks[i];});
+  document.documentElement.lang=lang;
+  window._cdDone=t.cdDone;
+}
+ 
+function chooseLang(lang){
+  applyLang(lang);
+  document.getElementById('lang-screen').classList.add('hidden');
+  document.getElementById('main-content').classList.add('visible');
+  startCountdown();
+  initScrollEffects();
+}
+ 
+function openMenu(){ document.getElementById('mobile-menu').classList.add('open'); }
+function closeMenu(){ document.getElementById('mobile-menu').classList.remove('open'); }
+ 
+/* ── COUNTDOWN ── */
+let cdInterval=null;
+function startCountdown(){
+  const target=new Date('2026-06-26T09:00:00+05:30');
+  function tick(){
+    const diff=target-new Date();
+    if(diff<=0){
+      clearInterval(cdInterval);
+      document.getElementById('sticky-countdown').innerHTML='<div style="color:#fff;font-size:0.95rem;font-weight:700;padding:0.5rem;">'+(window._cdDone||'🎉 Celebration time!')+'</div>';
+      return;
+    }
+    const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),
+          m=Math.floor((diff%3600000)/60000),sc=Math.floor((diff%60000)/1000);
+    document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
+    document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent=String(sc).padStart(2,'0');
+  }
+  tick(); cdInterval=setInterval(tick,1000);
+ 
+  /* show countdown after hero scrolls away */
+  const hero=document.querySelector('.hero'),nav=document.getElementById('main-nav'),cd=document.getElementById('sticky-countdown');
+  new IntersectionObserver(entries=>{
+    if(!entries[0].isIntersecting){cd.classList.add('visible');nav.classList.replace('at-top','below-cd');}
+    else{cd.classList.remove('visible');nav.classList.replace('below-cd','at-top');}
+  },{threshold:0.1}).observe(hero);
+}
+ 
+/* ── FADE IN ON SCROLL ── */
+function initScrollEffects(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});
+  },{threshold:0.1});
+  document.querySelectorAll('.event-card,.venue-card,.stay-card,.meal-card,.family-pill,.map-static').forEach(el=>{
+    el.style.opacity='0';el.style.transform='translateY(20px)';
+    el.style.transition='opacity 0.5s ease,transform 0.5s ease';
+    io.observe(el);
+  });
+}
+</script>
+</body>
+</html>
